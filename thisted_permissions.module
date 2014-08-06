@@ -1,0 +1,38 @@
+<?php
+/**
+ * @file
+ * Custom thisted permissions overrides.
+ */
+
+/**
+ * Implements hook_secure_permissions().
+ */
+function thisted_permissions_secure_permissions($role) {
+  $permissions = array(
+    'editor' => array(
+      'use panels in place editing',
+    ),
+  );
+  if (isset($permissions[$role])) {
+    return $permissions[$role];
+  }
+}
+
+/**
+ * Implements hook_page_alter().
+ *
+ * Remove the IPE bottom panel for roles whose group does not match the
+ * entity group.
+ */
+function thisted_permissions_page_alter(&$page) {
+  $item = menu_get_object();
+  if (isset($item->type) && $item->type == 'ding_library') {
+    global $user;
+    $groups = og_get_groups_by_user($user);
+    $node_groups = isset($groups['node']) ? $groups['node'] : NULL;
+
+    if (is_array($node_groups) && !in_array($item->nid, $node_groups)) {
+      unset($page['page_bottom']['panels_ipe']);
+    }
+  }
+}

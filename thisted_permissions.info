@@ -1,0 +1,6 @@
+name = Thisted permissions
+description = Custom permissions overrides
+core = 7.x
+version = 0.1
+package = Thisted
+dependencies[] = secure_permissions
